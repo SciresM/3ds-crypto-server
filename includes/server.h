@@ -15,7 +15,7 @@
 
 #define SOC_ALIGN       0x1000
 #define SOC_BUFFERSIZE  0x100000
-#define CRYPTO_BUFFERSIZE 0x400
+#define CRYPTO_BUFFERSIZE 0x10000
 
 void init();
 int  loop();

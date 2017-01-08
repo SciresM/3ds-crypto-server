@@ -154,11 +154,21 @@ int manage_connection()
     
     u32 percent = 0;
     
+    ssize_t r;
+    ssize_t expected;
+    
     for (u32 i = 0; i < num_packets; i++)
     {
-        ret	= recv(data.client_id, crypto_buffer, CRYPTO_BUFFERSIZE, 0);
-        PS_EncryptDecryptAes(CRYPTO_BUFFERSIZE, (unsigned char *)crypto_buffer, (unsigned char *)crypto_buffer, algo, ktype, iv);
-        send(data.client_id, crypto_buffer, CRYPTO_BUFFERSIZE, 0);
+        r = 0;
+        expected = (i == num_packets - 1) ? (metadata->len % CRYPTO_BUFFERSIZE) : CRYPTO_BUFFERSIZE;
+        do
+        {
+            r += recv(data.client_id, crypto_buffer + r, expected - r, 0);
+        } while (r != expected);
+        
+        PS_EncryptDecryptAes(CRYPTO_BUFFERSIZE, (unsigned char *)crypto_buffer, (unsigned char *)crypto_buffer, algo, ktype, iv);  
+        
+        ret = send(data.client_id, crypto_buffer, expected, 0);
         
         if (((100 * i) / num_packets) > percent)
         {

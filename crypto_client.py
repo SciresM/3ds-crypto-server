@@ -3,8 +3,19 @@ import struct
 import socket
 import binascii
 
+def send_all(sock, data):
+    r = len(data)
+    while len(data) > 0:
+        data = data[sock.send(data):]
+
+def recv_all(sock, size):
+    data = ''
+    while len(data) < size:
+        data += sock.recv(size - len(data))
+    return data
+
 def do_crypto(data, keyslot, algo, iv, keyY):
-    meta = struct.pack('<IIIIsss', 0xCAFEBABE, len(data), keyslot, algo, keyY, iv, '0x00'*0x3D0)
+    meta = struct.pack('<IIII', 0xCAFEBABE, len(data), keyslot, algo) + keyY + iv + ('\x00'*0x3D0)
     sock = socket.create_connection(('192.168.1.137', 8081))
     
     sock.send(meta)
@@ -16,11 +27,11 @@ def do_crypto(data, keyslot, algo, iv, keyY):
     outdata = ''
     while ofs < len(data):
         if ofs + bufsize < len(data):
-            sock.send(data[ofs:ofs+bufsize])
-            outdata += sock.recv(bufsize)
+            send_all(sock, data[ofs:ofs+bufsize])
+            outdata += recv_all(sock, bufsize)
         else:
-            sock.send(data[ofs:])
-            outdata += sock.recv(len(data) - ofs)
+            send_all(sock, data[ofs:])
+            outdata += recv_all(sock, len(data)-ofs)
         ofs += bufsize
     return outdata
     
