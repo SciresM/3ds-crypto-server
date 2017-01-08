@@ -160,7 +160,7 @@ int manage_connection()
     for (u32 i = 0; i < num_packets; i++)
     {
         r = 0;
-        expected = (i == num_packets - 1) ? (metadata->len % CRYPTO_BUFFERSIZE) : CRYPTO_BUFFERSIZE;
+        expected = ((i == num_packets - 1) && (metadata->len % CRYPTO_BUFFERSIZE != 0)) ? (metadata->len % CRYPTO_BUFFERSIZE) : CRYPTO_BUFFERSIZE;
         do
         {
             r += recv(data.client_id, crypto_buffer + r, expected - r, 0);
@@ -177,6 +177,13 @@ int manage_connection()
         }
     }
     printf("Sending/Receiving packets... 100%%\n");
+    
+    expected = 4;
+    r = 0;
+    do
+    {
+        r += recv(data.client_id, crypto_buffer + r, expected - r, 0);
+    } while (r != expected);
 
-	return 0;
+	return (*((u32 *)crypto_buffer) == 0xDEADCAFE) ? 0 : 1;
 }

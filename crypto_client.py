@@ -33,6 +33,8 @@ def do_crypto(data, keyslot, algo, iv, keyY):
             send_all(sock, data[ofs:])
             outdata += recv_all(sock, len(data)-ofs)
         ofs += bufsize
+    
+    send_all(sock, struct.pack('<I', 0xDEADCAFE))
     return outdata
     
 
