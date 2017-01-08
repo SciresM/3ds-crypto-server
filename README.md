@@ -6,3 +6,5 @@ Requires my [crypto-patches](https://github.com/SciresM/Luma3DS/tree/crypto-patc
 Gets about ~925 KB/s on my console/network.
 
 See crypto_client.py for an example client.
+
+![Example of NCCH decryption](/img/preview.jpg)
