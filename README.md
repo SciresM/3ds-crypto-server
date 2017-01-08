@@ -5,6 +5,8 @@ Requires my [crypto-patches](https://github.com/SciresM/Luma3DS/tree/crypto-patc
 
 Also requires very recent ctrulib (for PS_EncryptDecryptAES to actually work).
 
+Probably also requires you to enable "Patch SVC/service access" in Luma config.
+
 Gets about ~925 KB/s on my console/network.
 
 See crypto_client.py for an example client.
