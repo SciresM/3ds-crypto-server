@@ -20,6 +20,9 @@
 #define MAX_RECV_TRIES 0x400
 
 void init();
+
+int self_test();
+
 int  loop();
 void destroy();
 int manage_connection();

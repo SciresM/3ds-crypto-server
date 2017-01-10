@@ -16,6 +16,11 @@ DATA		:=
 INCLUDES	:=	includes
 ASSETS		:=	assets
 
+APP_TITLE       := 3DS Crypto Server
+APP_DESCRIPTION := Server for arbitrary 3ds crypto
+APP_AUTHOR      := SciresM
+
+
 ARCH	:=	-march=armv6k -mtune=mpcore -mfloat-abi=hard
 CFLAGS	:=	-g -Wall -O2 -mword-relocations \
 			-fomit-frame-pointer -ffunction-sections \

@@ -71,7 +71,6 @@ void init()
 	if ((ret = listen(data.server_id, 5)))
 		failExit("listen: %s (code: %d)\n", strerror(errno), errno);
 	data.running = 1;
-	printf("Ready...Press START to exit.\n");
 }
 
 int loop()
