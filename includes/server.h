@@ -17,6 +17,8 @@
 #define SOC_BUFFERSIZE  0x100000
 #define CRYPTO_BUFFERSIZE 0x10000
 
+#define MAX_RECV_TRIES 0x400
+
 void init();
 int  loop();
 void destroy();

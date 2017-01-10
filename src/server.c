@@ -71,7 +71,7 @@ void init()
 	if ((ret = listen(data.server_id, 5)))
 		failExit("listen: %s (code: %d)\n", strerror(errno), errno);
 	data.running = 1;
-	printf("Ready...\n");
+	printf("Ready...Press START to exit.\n");
 }
 
 int loop()
@@ -157,13 +157,22 @@ int manage_connection()
     ssize_t r;
     ssize_t expected;
     
+    u32 recv_cnt;
+    
     for (u32 i = 0; i < num_packets; i++)
     {
         r = 0;
+        recv_cnt = 0;
         expected = ((i == num_packets - 1) && (metadata->len % CRYPTO_BUFFERSIZE != 0)) ? (metadata->len % CRYPTO_BUFFERSIZE) : CRYPTO_BUFFERSIZE;
         do
         {
             r += recv(data.client_id, crypto_buffer + r, expected - r, 0);
+            recv_cnt++;
+            if (r > expected || recv_cnt > MAX_RECV_TRIES)
+            {
+                printf("Sending/Receiving packets... failed.\n");
+                return 1;
+            }
         } while (r != expected);
         
         PS_EncryptDecryptAes(CRYPTO_BUFFERSIZE, (unsigned char *)crypto_buffer, (unsigned char *)crypto_buffer, algo, ktype, iv);  
@@ -180,9 +189,16 @@ int manage_connection()
     
     expected = 4;
     r = 0;
+    recv_cnt = 0;
     do
     {
         r += recv(data.client_id, crypto_buffer + r, expected - r, 0);
+        recv_cnt++;
+        if (r > expected || recv_cnt > MAX_RECV_TRIES)
+        {
+            printf("Client failed to acknowledge success.\n");
+            return 1;
+        }
     } while (r != expected);
 
 	return (*((u32 *)crypto_buffer) == 0xDEADCAFE) ? 0 : 1;

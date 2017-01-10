@@ -36,7 +36,9 @@ void failExit(const char *fmt, ...)
 		hidScanInput();
 
 		u32 kDown = hidKeysDown();
-		if (kDown & KEY_B) exit(0);
+		if (kDown & KEY_B) break;
 	}
+    destroy();
+    exit(0);
 }
 // --------------------------------------------------------------------------
