@@ -1,5 +1,7 @@
 #include "server.h"
 
+static void *initial_stack_ptr = NULL;
+
 int self_test()
 {
     uint8_t *FCRAM = (uint8_t *)0x15000000;
@@ -23,6 +25,16 @@ int self_test()
 
 int	main(int argc, char **argv)
 {
+    if (initial_stack_ptr == NULL)
+    {
+        register int sp asm ("sp");
+        initial_stack_ptr = (void *)sp;
+        auto_recovering = false;
+    }
+    else 
+    {
+        asm("mov sp, %[isp]" : : [isp]"r"(initial_stack_ptr));
+    }
 	init();
     
     printf("Performing self test...\n");
