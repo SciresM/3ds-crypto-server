@@ -19,6 +19,10 @@
 
 #define MAX_RECV_TRIES 0x400
 
+bool auto_recovering;
+
+int main(int argc, char **argv);
+
 void init();
 
 int self_test();

@@ -29,16 +29,27 @@ void failExit(const char *fmt, ...)
 	vprintf(fmt, ap);
 	va_end(ap);
 	printf(CONSOLE_RESET);
-	printf("\nPress B to exit\n");
+	if (auto_recovering)
+	{
+		printf("\nAuto-recovery failed...\n");
+		printf("Press B to exit, or START to auto_recover\n");
 
-	while (aptMainLoop()) {
-		gspWaitForVBlank();
-		hidScanInput();
+		while (aptMainLoop()) {
+			gspWaitForVBlank();
+			hidScanInput();
 
-		u32 kDown = hidKeysDown();
-		if (kDown & KEY_B) break;
+			u32 kDown = hidKeysDown();
+			if (kDown & KEY_B) break;
+			if (kDown & KEY_START) goto auto_recover;
+		}
+		destroy();
+    	exit(0);
 	}
-    destroy();
-    exit(0);
+
+	auto_recover:
+	printf("\nAttempting to auto-recover.\n");
+	destroy();
+	auto_recovering = true;
+	main(0, NULL);
 }
 // --------------------------------------------------------------------------

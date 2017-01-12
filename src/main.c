@@ -33,6 +33,8 @@ int	main(int argc, char **argv)
     
     printf("Self test succeeded!\n\n");
     printf("Ready... Press START to exit.\n");
+
+    auto_recovering = false;
     
 	do
 	{
@@ -44,5 +46,5 @@ int	main(int argc, char **argv)
 	}
 	while (aptMainLoop() && loop());
 	destroy();
-	return 0;
+	exit(0);
 }
