@@ -49,6 +49,9 @@ void init()
 	if (data.server_id < 0)
 		failExit("socket: %s (code: %d)\n", strerror(errno), errno);
 
+    if (setsockopt(data.server_id, SOL_SOCKET, SO_REUSEADDR, &(int){ 1 }, sizeof(int)) < 0)
+        failExit("setsockopt(SO_REUSEADDR) failed!\n");
+
 
 	// Init server_addr on default address and port 8081
 	data.server_addr.sin_family = AF_INET;
