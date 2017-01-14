@@ -120,6 +120,13 @@ void destroy()
 	gfxExit();
 	hidExit();
     psExit();
+    if (socket_buffer != NULL)
+    	free(socket_buffer);
+    socket_buffer = NULL;
+    
+    if (crypto_buffer != NULL)
+    	free(crypto_buffer);
+    crypto_buffer = NULL;
 }
 
 int manage_connection()

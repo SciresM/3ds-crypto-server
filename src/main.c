@@ -40,7 +40,7 @@ int	main(int argc, char **argv)
     printf("Performing self test...\n");
     if (self_test() != 0)
     {
-        failExit("Self test failed!\nEnsure svc/service access is patched,\nAnd that P9 crypto patches are installed.\n");
+        failExit("Self test failed!\nEnsure svc/service access is patched,\nAnd that P9 crypto patches are installed.\n\nIf you are sure this is the case, try again.");
     }
     
     printf("Self test succeeded!\n\n");
